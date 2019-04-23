@@ -1,0 +1,121 @@
+﻿@model UniversityCourseResultManagementSystem.Models.Student
+@{
+	ViewBag.Title = " Register Student ";
+}
+<html>
+
+<head>
+	@*<link rel="stylesheet" href="/resources/demos/style.css">*@
+	<style type="text/css">
+		.control-label {
+		}
+	</style>
+</head>
+<body>
+	<h2>Register Student</h2>
+	<div align="center" name="messageDiv" id="messageDiv">
+		@if (@ViewBag.Message != null)
+		{
+			<span class="success-alert" id="success-alert" style="color:green">@ViewBag.Message</span>
+			@*<span class="alert alert-success">@ViewBag.Message</span>*@
+		}
+	</div>
+	@using (Html.BeginForm())
+	{
+		@Html.AntiForgeryToken()
+
+		<div class="form-horizontal">
+			<h4>  </h4>
+			<hr />
+			@Html.ValidationSummary(true)
+			<div class="form-group">
+				@Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+				<div class="col-md-10">
+					@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+					@Html.ValidationMessageFor(model => model.Name,"",new {@class="text-danger"})
+				</div>
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(model => model.Email, new { @class = "control-label col-md-2" })
+				<div class="col-md-10">
+					@Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+					@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+				</div>
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(model => model.ContactNo, "Contact No", new { @class = "control-label col-md-2" })
+				<div class="col-md-10">
+					@Html.EditorFor(model => model.ContactNo, new { htmlAttributes = new { @class = "form-control" } })
+					@Html.ValidationMessageFor(model => model.ContactNo, "", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(model => model.Address, new { @class = "control-label col-md-2" })
+				<div class="col-md-10">
+					@Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+					@Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(model => model.Date, new { @class = "control-label col-md-2" })
+				<div class="col-md-10">
+					@Html.EditorFor(model => model.Date, new { htmlAttributes = new { @id = "txtdate", @class = "date-picker form-control" } })
+					@Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(model => model.DepartmentId, "Department", new { @class = "control-label col-md-2" })
+				<div class="col-md-10">
+					@Html.DropDownListFor(model => model.DepartmentId, ViewBag.DepartmentId as SelectList, "--Select Department--", new { @id = "ddlDepartmentId", @class = "form-control" })
+					@Html.ValidationMessageFor(model => model.DepartmentId, "", new { @class = "text-danger" })
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-md-offset-2 col-md-10">
+					<input type="submit" value="Register" class="btn btn-primary btn-sm" />
+				</div>
+			</div>
+		</div>
+	}
+</body>
+</html>
+
+@section Scripts {
+	@Scripts.Render("~/bundles/jqueryval")
+	<script>
+		$(document).ready(function () {
+
+			$(function () {
+				$('.date-picker').datetimepicker({
+					dateFormat: '',
+					timeFormat: 'hh:mm tt',
+					timeOnly: true
+			});
+			});
+
+			$("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+				$("#success-alert").alert('close');
+			});
+			//date validation
+			function ValidateDate(dtValue) {
+				var dtRegex = new RegExp(/\b\d{1,2}[\/-]\d{1,2}[\/-]\d{4}\b/);//Date formate checkup.
+				return dtRegex.test(dtValue);
+			}
+
+			//On Text change
+			jQuery(function ($) {
+				$('#txtDate').on('keyup',
+					function () {
+						if (!ValidateDate($('#txtDate').val())) {						
+							$('#txtDate').val("");
+							alert("Invalid Date Format");
+						}
+					});
+			});
+		});</script>
+}

@@ -1,0 +1,28 @@
+﻿@model List<UniversityCourseResultManagementSystem.Models.Department>
+
+@{
+	ViewBag.Title = "ViewDepartments";
+}
+<div >
+	<h2 align="center"><u><b>View All Departments</b></u></h2>
+	<table width="100%" class="table table-striped">
+		<thead>
+			<tr>
+				<th style="width: 30%">Code</th>
+				<th style="width: 70%">Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{
+				foreach (var department in Model)
+				{
+					<tr>
+						<td>@department.DeptCode</td>
+						<td>@department.DeptName</td>
+					</tr>
+				}
+			}
+		</tbody>
+	</table>
+</div>
+

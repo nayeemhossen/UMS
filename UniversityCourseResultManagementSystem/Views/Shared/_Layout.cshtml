@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title - UniversityManagementSystem</title>
+	@Styles.Render("~/Content/css")
+	@Scripts.Render("~/bundles/modernizr")
+	<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+	<link href="~/Content/Style.css" rel="stylesheet" />
+</head>
+<body>
+	<div class="container">
+		<ul class="menu cf">
+			<li>@Html.ActionLink("Home", "Index", "Home")</li>
+			<li>
+				<a href="">Department</a>
+				<ul class="submenu">
+					<li>
+						l
+						<a href="/Department/Create">Save Department</a>
+					</li>
+					<li>
+						<a href="/Department/ViewDepartments">View Departments</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="">Course</a>
+				<ul class="submenu">
+					<li>
+						<a href="/Course/Save">Save Course</a>
+					</li>
+					<li>
+						<a href="/Course/ViewCourseStatistics">View Course Statistics</a>
+					</li>
+					<li>
+						<a href="/Course/UnassignCourses">Unassign All Courses</a>
+					</li>
+
+				</ul>
+			</li>
+			<li>
+				<a href="">Teacher</a>
+				<ul class="submenu">
+					<li>
+						<a href="/Teacher/Save">Save Teacher</a>
+					</li>
+					<li>
+						<a href="/CourseAssign/Save">Course Assign to Teacher</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="">Student</a>
+				<ul class="submenu">
+					<li>
+						<a href="/Student/Register">Register Student</a>
+					</li>
+					<li>
+						<a href="/Student/ShowStudentDetails">Show Student Details</a>
+					</li>
+					<li>
+						<a href="/EnrollCourse/Create">Enroll Student in a Course</a>
+					</li>
+					<li>
+						<a href="/Student/SaveResult"> Save Student Result</a>
+					</li>
+					<li>
+						<a href="/Student/ViewResult"> View Result</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="">ClassRoom</a>
+				<ul class="submenu">
+					<li>
+						<a href="/ClassRoomAllocation/Create">Allocate ClassRooms</a>
+					</li>
+					<li>
+						<a href="/ClassRoomAllocation/ViewClassSchedule">View Class Schedule and Room Information</a>
+					</li>
+					<li>
+						<a href="/ClassRoomAllocation/UnallocatedClassRoom"> Unallocate All Classroomsn</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<div class="container body-content">
+		@RenderBody()
+		<hr />
+		<footer>
+			<br />
+			<br />
+			<p align="center">
+				&copy; @DateTime.Now.Year - Developed by Md. Nayeem Hossen.<br />
+				Student Of Daffodil International University.<br />
+				Freelance Developer.<br />
+				Email:<i> <u>nayeem.hossen@outlook.com.</u></i>
+			</p>
+		</footer>
+	</div>
+	@Scripts.Render("~/bundles/jquery")
+	@Scripts.Render("~/bundles/bootstrap")
+	<script src="~/Scripts/jquery-3.3.1.js"></script>
+	<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+	<script src="~/Scripts/jquery-TimePicker-1.0.0.js"></script>
+	@RenderSection("scripts", required: false)
+</body>
+</html>

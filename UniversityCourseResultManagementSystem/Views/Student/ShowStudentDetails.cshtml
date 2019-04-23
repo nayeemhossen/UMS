@@ -1,0 +1,60 @@
+﻿@model IEnumerable<UniversityCourseResultManagementSystem.Models.Student>
+
+@{
+    ViewBag.Title = "ShowStudentDetails";
+}
+
+<h2>Show Student Details</h2>
+<table class="table">
+	<tr>
+		<th>
+			@Html.DisplayNameFor(model => model.Department.DeptCode)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Name)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Email)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.ContactNo)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Date)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Address)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.StudentRegNo)
+		</th>
+		<th></th>
+	</tr>
+
+	@foreach (var item in Model.Reverse()) {
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.Department.DeptCode)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Name)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Email)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.ContactNo)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Date)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Address)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.StudentRegNo)
+			</td>
+		</tr>
+	}
+
+</table>

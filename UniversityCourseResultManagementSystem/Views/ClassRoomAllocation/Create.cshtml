@@ -1,0 +1,201 @@
+﻿@model UniversityCourseResultManagementSystem.Models.ClassRoomAllocation
+@{
+	ViewBag.Title = "RoomAllocation";
+}
+<h2>Class Room Allocation</h2>
+
+@using (Html.BeginForm("Create", "ClassRoomAllocation", FormMethod.Post, new { id = "RoomAllocationForm" }))
+{
+	@Html.AntiForgeryToken()
+
+	<div class="form-horizontal">
+		<hr />
+		@Html.ValidationSummary(true)
+		<div class="form-group">
+			@Html.LabelFor(model => model.DepartmentId, "Department", new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.DropDownListFor(model => model.DepartmentId, ViewBag.DepartmentId as SelectList, "--Select Department--", new { @id = "ddlDepartmentId", @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.DepartmentId ,"", new { id = "departmentErrorMessage", @class = "text-danger" })
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.CourseId, "Course", new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				<select name="courseId" id="ddlCourseId" class="form-control">
+					<option value="">--Select Course--</option>
+				</select>
+				@Html.ValidationMessageFor(model => model.CourseId, "", new {id = "courseErrorMessage", @class = "text-danger"})
+
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.RoomId, "Room", new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.DropDownListFor(model => model.RoomId, ViewBag.RoomId as SelectList, "--Select Room--", new { @id = "ddlRoomId", @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.RoomId, "", new { id = "roomErrorMessage", @class = "text-danger" })
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.DayId, "Day", new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.DropDownListFor(model => model.DayId, ViewBag.DayId as SelectList, "--Select Day--", new { @id = "ddlDayId", @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.DayId, "", new { id = "dayErrorMessage", @class = "text-danger" })
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.StartTime, "From", new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.StartTime,new { htmlAttributes = new { type = "time", id = "startTime", @class = "time-picker form-control" } })
+				@Html.ValidationMessageFor(model => model.StartTime, "", new {id = "startTimeErrorMessage", @class = "text-danger"})
+
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.EndTime, "To", new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.EndTime,new { htmlAttributes = new { type = "time", id = "endTime", @class = "time-picker form-control" } })
+				@Html.ValidationMessageFor(model => model.EndTime, "", new {id = "endTimeErrorMessage", @class = "text-danger"})
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" value="Allocate" id="submit" class="btn btn-primary btn-sm" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<label id="roomAllocateSuccessMessage" style="color: green;"></label>
+				<label id="roomAllocateErrorMessage" style="color: red;"></label>
+				<label id="roomAllocateNotPossibleMessage" style="color: red;"></label>
+			</div>
+		</div>
+	</div>
+}
+@section Scripts {
+	<script>
+        $(document).ready(function() {
+			//$('.time-picker').timepicker({ 'step': 15 });
+
+            $("#ddlDepartmentId").change(function () {
+
+                $("#roomAllocateSuccessMessage").text("");
+				$("#roomAllocateErrorMessage").text("");
+	            $("#roomAllocateNotPossibleMessage").text("");
+
+				var departmentId = $("#ddlDepartmentId").val();
+				var jsonData = { deptId: departmentId };
+				$("#departmentErrorMessage").text("");
+				$("#ddlCourseId").empty();
+				$("#ddlCourseId").append('<option value=0>--Select Course--</option>');
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetCoursesByDeptId", "ClassRoomAllocation")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    success: function(data) {                      
+                        $.each(data, function(key, value) {
+							$("#ddlCourseId").append('<option value=' + value.Id + '>' + value.CourseCode + '</option>');
+                        });
+                    }
+                });
+            });
+
+            $("#submit").click(function() {
+	            ResetErrorLabel();
+
+				var departmentId = $("#ddlDepartmentId").val();
+                if (departmentId == "") {
+					$("#departmentErrorMessage").text("Select One Department!");
+                }
+
+				var courseId = $("#ddlCourseId").val();
+                if (courseId == "") {
+                    $("#courseErrorMessage").text("Select One Course!");
+                }
+
+                var roomId = $("#ddlRoomId").val();
+                if (roomId == "") {
+                    $("#roomErrorMessage").text("Select One Room!");                   
+                }
+
+                var dayId = $("#ddlDayId").val();
+                if (dayId =="" ) {
+                    $("#dayErrorMessage").text("Select One Day!");                  
+                }
+
+                var sTime = $("#startTime").val();
+                if (sTime == "") {
+                    $("#startTimeErrorMessage").text("Start time is Required!");
+				}
+	            
+	            var hour = parseInt(sTime.substr(0, 2));
+	            var minute = parseInt(sTime.substr(3, 5));
+				var startTime = hour * 60 +parseInt(minute) + 1;             
+
+	           var eTime = $("#endTime").val();
+	            if (eTime == "") {
+		            $("#endTimeErrorMessage").text("End time is Required!");                   
+	            }
+				hour = parseInt(eTime.substr(0, 2));
+				minute = parseInt(eTime.substr(3, 5));
+                var endTime = hour * 60 + minute;
+
+                if (startTime == endTime) {
+                    $("#roomAllocateNotPossibleMessage").text("Its not Possible to create Zero Minute Duration class");
+                    return false;
+				}
+                else if (startTime < endTime) {
+					var jsonData = {
+						DepartmentId: departmentId,
+						CourseId: courseId,
+						RoomId: roomId,
+						DayId: dayId,
+						StartTime: startTime,
+						EndTime: endTime
+					};
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SaveRoomSchedule", "ClassRoomAllocation")',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(jsonData),
+                        dataType: "json",
+                        success: function(data) {
+                            if (data == true) {
+                                $("#roomAllocateSuccessMessage").text("Class Room Schedule Saved Successfully!");
+								$("#ddlDepartmentId").prop("selectedIndex", 0);
+                                $("#ddlCourseId").prop("selectedIndex", 0);
+                                $("#ddlRoomId").prop("selectedIndex", 0);
+                                $("#ddlDayId").prop("selectedIndex", 0);
+                                $("#startTime").val("");
+                                $("#endTime").val('mm/dd/yyyy');
+                                return false;
+							}
+							else
+                            {
+                                $("#roomAllocateErrorMessage").text("Overlapping Problem, Change Time or Day.");
+                                return false;
+                            }
+                        }
+                    });
+				}
+                else
+                {
+                    $("#roomAllocateNotPossibleMessage").text("Invalid Time chosen");
+                }
+                return false;
+            });
+        });
+
+        function ResetErrorLabel() {
+			$("#departmentErrorMessage").text("");
+			$("#courseErrorMessage").text("");
+            $("#roomErrorMessage").text("");
+            $("#dayErrorMessage").text("");
+            $("#startTimeErrorMessage").text("");
+            $("#endTimeErrorMessage").text("");
+			$("#roomAllocateNotPossibleMessage").text("");
+			$("#roomAllocateErrorMessage").text("");
+        }
+	</script>
+}

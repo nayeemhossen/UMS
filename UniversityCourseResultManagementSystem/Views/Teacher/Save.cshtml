@@ -1,0 +1,98 @@
+﻿@model UniversityCourseResultManagementSystem.Models.Teacher
+
+@{
+	ViewBag.Title = "SaveTeacher";
+}
+
+<h2>Save Teacher</h2>
+<div align="center">
+	@if (@ViewBag.Message != null)
+	{
+		<span class="alert alert-success" id="success-alert">@ViewBag.Message</span>
+	}
+</div>
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+
+	<div class="form-horizontal">
+
+		<hr />
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+		<div class="form-group">
+			@Html.LabelFor(model => model.TeacherName, new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.TeacherName, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.TeacherName, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.TeacherAddress, new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.TeacherAddress, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.TeacherAddress, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.TeacherEmail, new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.TeacherEmail, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.TeacherEmail, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.TeacherContactNo, new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.TeacherContactNo, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.TeacherContactNo, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.DesignationId, "Designation", new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.DropDownListFor(model => model.DesignationId, ViewBag.DesignationId as SelectList, "--Select Designation--", new { @id = "ddlDesignationId", @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.DesignationId, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.DepartmentId, "Department", new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.DropDownListFor(model => model.DepartmentId, ViewBag.DepartmentId as SelectList, "--Select Department--", new { @id = "ddlDepartmentId", @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.DepartmentId, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.CreditTaken, new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.CreditTaken, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.CreditTaken, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" value="Save" class="btn btn-primary btn-sm" />
+			</div>
+		</div>
+	</div>
+}
+@section Scripts {
+	@Scripts.Render("~/bundles/jqueryval")
+	<script>$(document).ready(function () {
+
+            $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#success-alert").alert('close');
+            });
+
+            $("#submit").click(function () {
+
+
+
+
+            });
+
+
+
+
+        });</script>
+}

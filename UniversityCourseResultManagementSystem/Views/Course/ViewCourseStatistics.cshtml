@@ -1,0 +1,79 @@
+﻿@model UniversityCourseResultManagementSystem.Models.CourseAssign
+@{
+	ViewBag.Title = "ViewCourseStatistics";
+}
+<fieldset>
+	<legend>View Course Statistics</legend>
+	@using (Html.BeginForm())
+	{
+		<div class="form-group">
+			@Html.LabelFor(model => model.DepartmentId, "Department", new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.DropDownListFor(model => model.DepartmentId, ViewBag.DepartmentId as SelectList, "--Select Department--", new { @id = "ddlDepartmentId", @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.DepartmentId,"", new { id = "DeptErrorLabel", @class = "text-danger" })
+			</div>
+		</div>
+		<label id="messageLabel" style="color: #F91333; font-weight: normal; font-size: 20px;"></label>
+	
+		<div id="htmlTableDiv"></div>
+	}
+</fieldset>
+@section Scripts {
+	<script>
+        $(function() {
+            $("#ddlDepartmentId").change(function() {
+				var departmentId = $("#ddlDepartmentId").val();
+                $("#messageLabel").text("");
+                var jsonData = { deptId: departmentId };
+	
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ShowCourseStatistics", "Course")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    success:function(data) {
+	                    console.log(data);
+                        var table = $('<table id="statisticsTable" border="1" class="table" >');
+                        table.append('<th style="text-align: center; border-right: 1px solid #ffffff;">Code</th>');
+                        table.append('<th style="text-align: center; border-right: 1px solid #ffffff;">Title</th>');
+                        table.append('<th style="text-align: center; border-right: 1px solid #ffffff;">Semester</th>');
+                        table.append('<th style="text-align: center; border-right: 1px solid #ffffff;">Assigned To</th></table>');
+                        table.css('background-color', '#89F913');
+
+	                    var tableRow = false;
+                        $("#htmlTableDiv").show();
+                        $.each(data, function(key, value) {
+							var trow = $('<tr></tr>');
+                            var assignedTo = value.CourseAssignTo;
+
+                            if (assignedTo == null || assignedTo == "")
+                                assignedTo = 'Not Assigned Yet';
+
+                            trow.append('<td style="text-align: center; border-right: 1px solid #ffffff;">' + value.CourseCode + '</td>');
+                            trow.append('<td style="text-align: center; border-right: 1px solid #ffffff;">' + value.CourseName + '</td>');
+                            trow.append('<td style="text-align: center; border-right: 1px solid #ffffff;">' + value.Semester.SemesterName + '</td>');
+                            trow.append('<td style="text-align: center; border-right: 1px solid #ffffff;">' + assignedTo + '</td>');
+
+                            table.append(trow);
+                            tableRow = true;
+                        });
+
+                        $("tr:odd", table).css('background-color', '#F5F5F5');
+                        $("tr:even", table).css('background-color', '#EEEEEE');
+
+                        $("#htmlTableDiv").html(table);
+
+             if (tableRow == false)
+                        {
+                            $("#htmlTableDiv").hide();
+							if (departmentId != 0)
+                                $("#messageLabel").text("This Department has no Course.");
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+	</script>
+}
